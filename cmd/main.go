@@ -14,12 +14,16 @@
 
 package main
 
-import "os"
+import (
+	"istio.io/pkg/log"
+	"os"
+)
 
 func main() {
-	rootCmd := getRootCmd(os.Args[1:])
+	rootCmd := newRootCmd()
 
 	if err := rootCmd.Execute(); err != nil {
+		log.Error(err.Error())
 		os.Exit(-1)
 	}
 }

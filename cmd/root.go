@@ -29,13 +29,15 @@ var (
 	cliArgs        = bootstrap.DefaultArgs()
 )
 
-func getRootCmd(args []string) *cobra.Command {
+func newRootCmd() *cobra.Command {
 
 	rootCmd := &cobra.Command{
-		Use:   "server",
+		Use:   "ior",
 		Short: "Connects to Galley and manages OpenShift Routes based on Istio Gateways",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			log.Configure(loggingOptions)
+			if err := log.Configure(loggingOptions); err != nil {
+				return err
+			}
 
 			log.Infof("Starting IOR %s", version.Info)
 
@@ -48,7 +50,6 @@ func getRootCmd(args []string) *cobra.Command {
 		},
 	}
 
-	rootCmd.SetArgs(args)
 	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 	rootCmd.PersistentFlags().StringVarP(&cliArgs.McpAddr, "mcp-address", "", cliArgs.McpAddr,
 		"Galley's MCP server address")
